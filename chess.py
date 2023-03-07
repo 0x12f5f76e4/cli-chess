@@ -79,23 +79,69 @@ def getFenstring(board: list, piece: list):
 def possibleMoves(pieces: list, board: list):
     white = {}
     black = {}
+    csL = {}
     for piece in pieces:
+        csL[piece.getUnicode()] = piece.getFen()
         if piece.getFen().islower():
             white[piece.getUnicode()] = piece.getFen()
         else:
             black[piece.getUnicode()] = piece.getFen()
-
-
     #loop over the board to check each piece's alignments, by incrementing or decrementing their board[x+-1/8][j+-1/8] values
     possibleMoves = {}
     for x in range(len(board)):
         for j in range(len(board[x])):
-            pass
+            if board[x][j] != 0:
+                #pawns
+                if x >= 1:
+                    if csL[board[x][j]] == "p": # check for white pawn, which can only advance in x-1 and x-2 and j-+1 if capture possible
+                        # pawn advance of 1 and 2
+                        if x <= len(board)-2: # x <= len(board)- 2 so the pawn doesn't go further the promotion line 
+                            possibleMoves[csL[board[x][j]], (x,j)] = [(x+2, j), (x+1, j)]
+                        #pawn capture for j-1 and j+1
+                        if 1<= j<= 6:
+                            if board[x+1][j+1] != 0 and '♚' and board[x+1][j+1] not in white: 
+                                possibleMoves[csL[board[x][j]], (x, j)] += (x+1, j+1)
+                            
+                            if board[x+1][j-1] !=0 and '♚' and board[x+1][j-1] not in white:
+                                possibleMoves[csL[board[x][j]], (x, j)] += (x+1, j-1)
+
+                        elif j == 0:
+                            if board[x+1][j+1]!= 0 and '♚' and board[x+1][j-1] not in white:
+                                possibleMoves[csL[board[x][j]], (x, j)] += (x+1, j+1)
+                        
+                        else:
+                            if board[x+1][j-1]!= 0 and '♚' and board[x+1][j-1] not in white:
+                                possibleMoves[csL[board[x][j]], (x, j)] += (x+1, j-1)
+                
+                if csL[board[x][j]] == "P":
+                    if len(board) - x >= 1:
+                        possibleMoves[csL[board[x][j]], (x,j)] = [(x-2, j), (x-1, j)]
+                    
+                    if 1 <= j <= 6:
+                        if board[x-1][j+1] != 0 and '♔' and board[x-1][j+1] not in black:
+                            possibleMoves[csL[board[x][j]], (x, j)] += (x-1, j+1)
+
+                        if board[x-1][j-1] != 0 and '♔' and board[x-1][j-1] not in black:
+                            possibleMoves[csL[board[x][j]], (x, j)] += (x-1, j-1)
+
+                    elif j == 0:
+                        if board[x-1][j+1] !=0 and '♔' and board[x-1][j+1] not in black:
+                            possibleMoves[csL[board[x][j]], (x, j)] += (x-1, j+1)
+                    
+                    else:
+                        if board[x-1][j-1] !=0 and '♔' and board[x-1][j-1] not in black:
+                            possibleMoves[csL[board[x][j]], (x, j)] += (x-1, j-1)
+                #knights
+                if csL[board[x][j]] == "n":
+                    #board[x+-2/-1][j+1-1]
+                    try:
+                        if board[x+2][j-1] !=0 and '♚' and board[x-1][j-1] not in black:
 
     #exclude the possible alignments where ally's piece collide and add possible captures
     #return the dictionnary
     return possibleMoves
-    
+
+
 def PlayerPlay(possibleMoves: list, board: list):
     pass
     
@@ -133,4 +179,5 @@ if __name__ == "__main__":
     chessBoard = getBoard()
     setBoard(chessBoard, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", pieces)
     printBoard(chessBoard)
-    possibleMoves(pieces, chessBoard)
+    x = possibleMoves(pieces, chessBoard)
+    print(x)
