@@ -1,7 +1,8 @@
 import random, sys
 
 class Piece:
-    def __init__(self, unicode: str, color: int, value: int, fenName: str):
+    def __init__(self, name:str, unicode: str, color: int, value: int, fenName: str):
+        self.name = name
         self.unicode = unicode
         self.color = color
         self.value = value
@@ -22,8 +23,9 @@ class Piece:
     def appendPieces(self, p: list):
         """Append the piece to a list, since __main__.Piece object don't have append as an attribute."""
         p.append(self)
-        
 
+    def getName(self):
+        return self.name
     
     
 def getBoard():
@@ -75,48 +77,60 @@ def getFenstring(board: list, piece: list):
             
  
 def possibleMoves(pieces: list, board: list):
-    #get the corresponding fstring from the pieces: list unicodes
-    possibleMoves = {}
+    white = {}
+    black = {}
     for piece in pieces:
-        possibleMoves[piece.getUnicode()] = piece.getFen()
-    
+        if piece.getFen().islower():
+            white[piece.getUnicode()] = piece.getFen()
+        else:
+            black[piece.getUnicode()] = piece.getFen()
+
+
     #loop over the board to check each piece's alignments, by incrementing or decrementing their board[x+-1/8][j+-1/8] values
+    possibleMoves = {}
     for x in range(len(board)):
         for j in range(len(board[x])):
             pass
+
     #exclude the possible alignments where ally's piece collide and add possible captures
-    #separate black and white's possible moves with 2 keys in 1 dictionnary
     #return the dictionnary
     return possibleMoves
     
 def PlayerPlay(possibleMoves: list, board: list):
     pass
     
-    
+def computerPlay(possibleMoves: list, board: list):
+    pass
+
+def isCheckmate(board: list):
+    pass
+
+def isCheck(board: list):
+    pass
+
+def isDraw(board: list):
+    pass
+
+
 #create the pieces and put them in a list
 global pieces
 pieces = []
-whitePawn = Piece('♙', 0, 1, 'p').appendPieces(pieces)
-whiteBishop = Piece('♗', 0, 3, 'b').appendPieces(pieces)
-whiteKnight = Piece('♘', 0, 3, 'n').appendPieces(pieces)
-whiteRook = Piece('♖', 0, 5, 'r').appendPieces(pieces)
-whiteQueen = Piece('♕', 0, 9, 'q').appendPieces(pieces)
-whiteKing = Piece('♔', 0, 0, 'k').appendPieces(pieces)
-blackPawn = Piece('♟', 1, 1, 'P').appendPieces(pieces)
-blackBishop = Piece('♝', 1, 3, 'B').appendPieces(pieces)
-blackKnight = Piece('♞', 1, 3, 'N').appendPieces(pieces)
-blackRook = Piece('♜', 1, 5, 'R').appendPieces(pieces)
-blackQueen = Piece('♛', 1, 9, 'Q').appendPieces(pieces)
-blackKing = Piece('♚', 1, 0, 'K').appendPieces(pieces)
+whitePawn = Piece('Pawn', '♙', 0, 1, 'p').appendPieces(pieces)
+whiteBishop = Piece('Bishop', '♗', 0, 3, 'b').appendPieces(pieces)
+whiteKnight = Piece('Knight', '♘', 0, 3, 'n').appendPieces(pieces)
+whiteRook = Piece('Rook', '♖', 0, 5, 'r').appendPieces(pieces)
+whiteQueen = Piece('Queen', '♕', 0, 9, 'q').appendPieces(pieces)
+whiteKing = Piece('King', '♔', 0, 0, 'k').appendPieces(pieces)
+blackPawn = Piece('Pawn','♟', 1, 1, 'P').appendPieces(pieces)
+blackBishop = Piece('Bishop','♝', 1, 3, 'B').appendPieces(pieces)
+blackKnight = Piece('Knight','♞', 1, 3, 'N').appendPieces(pieces)
+blackRook = Piece('Rook','♜', 1, 5, 'R').appendPieces(pieces)
+blackQueen = Piece('Queen','♛', 1, 9, 'Q').appendPieces(pieces)
+blackKing = Piece('King','♚', 1, 0, 'K').appendPieces(pieces)
 
 
 if __name__ == "__main__":
     chessBoard = getBoard()
     setBoard(chessBoard, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", pieces)
     printBoard(chessBoard)
-    a = possibleMoves(pieces, chessBoard)
-    print(a)
-    
-    
-
-
+    possibleMoves(pieces, chessBoard)
