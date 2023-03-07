@@ -1,8 +1,7 @@
 import random, sys
 
 class Piece:
-    def __init__(self, name:str, unicode: str, color: int, value: int, fenName: str):
-        self.name = name
+    def __init__(self, unicode: str, color: int, value: int, fenName: str):
         self.unicode = unicode
         self.color = color
         self.value = value
@@ -23,11 +22,7 @@ class Piece:
     def appendPieces(self, p: list):
         """Append the piece to a list, since __main__.Piece object don't have append as an attribute."""
         p.append(self)
-    
-    def getName(self):
-    """Return a piece's name"""
-        return self.name
-
+        
 
     
     
@@ -65,42 +60,63 @@ def setBoard(board: list, fenstr: str, pieces: list):
                     
             except ValueError:
                 board[x][j] = csL[fenstr[x][j]]
-
                 
-def modifyFen(originalFen: str, pieces: list):
-    newFen = originalFen
-    return newFen
-
-def Play(board: list, FEN: str):
-    #fenstring tells us which turn is it to play, black or white
-    for char in FEN:
-        pass
-
-def possibleMoves(pieces: list, board: list, name: str):
-    return name
-
+def getFenstring(board: list, piece: list):
+    fstr = ''
+    csL = {}
+    for piece in pieces:
+        csL[piece.getUnicode()] = piece.getFen()
+        
+    #loop over the board, check if board[index][index] is == 0, if yes check if last fstr char is an integer, then increment it
+    #else get the corresponding value of the board[index][index] from the dictonnary and append it to the fstr
+    #add += "/" for each index == 8
+    
+    return fstr
+            
+ 
+def possibleMoves(pieces: list, board: list):
+    #get the corresponding fstring from the pieces: list unicodes
+    possibleMoves = {}
+    for piece in pieces:
+        possibleMoves[piece.getUnicode()] = piece.getFen()
+    
+    #loop over the board to check each piece's alignments, by incrementing or decrementing their board[x+-1/8][j+-1/8] values
+    for x in range(len(board)):
+        for j in range(len(board[x])):
+            pass
+    #exclude the possible alignments where ally's piece collide and add possible captures
+    #separate black and white's possible moves with 2 keys in 1 dictionnary
+    #return the dictionnary
+    return possibleMoves
+    
+def PlayerPlay(possibleMoves: list, board: list):
+    pass
+    
     
 #create the pieces and put them in a list
 global pieces
 pieces = []
-whitePawn = Piece('pawn', '♙', 0, 1, 'p').appendPieces(pieces)
-whiteBishop = Piece('bishop', '♗', 0, 3, 'b').appendPieces(pieces)
-whiteKnight = Piece('knight', '♘', 0, 3, 'n').appendPieces(pieces)
-whiteRook = Piece('rook', '♖', 0, 5, 'r').appendPieces(pieces)
-whiteQueen = Piece('queen', '♕', 0, 9, 'q').appendPieces(pieces)
-whiteKing = Piece('king', '♔', 0, 0, 'k').appendPieces(pieces)
-blackPawn = Piece('pawn', '♟', 1, 1, 'P').appendPieces(pieces)
-blackBishop = Piece('bishop', '♝', 1, 3, 'B').appendPieces(pieces)
-blackKnight = Piece('knight', '♞', 1, 3, 'N').appendPieces(pieces)
-blackRook = Piece('rook', '♜', 1, 5, 'R').appendPieces(pieces)
-blackQueen = Piece('queen', '♛', 1, 9, 'Q').appendPieces(pieces)
-blackKing = Piece('king', '♚', 1, 0, 'K').appendPieces(pieces)
+whitePawn = Piece('♙', 0, 1, 'p').appendPieces(pieces)
+whiteBishop = Piece('♗', 0, 3, 'b').appendPieces(pieces)
+whiteKnight = Piece('♘', 0, 3, 'n').appendPieces(pieces)
+whiteRook = Piece('♖', 0, 5, 'r').appendPieces(pieces)
+whiteQueen = Piece('♕', 0, 9, 'q').appendPieces(pieces)
+whiteKing = Piece('♔', 0, 0, 'k').appendPieces(pieces)
+blackPawn = Piece('♟', 1, 1, 'P').appendPieces(pieces)
+blackBishop = Piece('♝', 1, 3, 'B').appendPieces(pieces)
+blackKnight = Piece('♞', 1, 3, 'N').appendPieces(pieces)
+blackRook = Piece('♜', 1, 5, 'R').appendPieces(pieces)
+blackQueen = Piece('♛', 1, 9, 'Q').appendPieces(pieces)
+blackKing = Piece('♚', 1, 0, 'K').appendPieces(pieces)
 
 
 if __name__ == "__main__":
     chessBoard = getBoard()
     setBoard(chessBoard, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", pieces)
     printBoard(chessBoard)
+    a = possibleMoves(pieces, chessBoard)
+    print(a)
+    
     
 
 
