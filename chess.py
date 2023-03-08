@@ -1,4 +1,5 @@
 import random, sys
+import re
 
 class Piece:
     def __init__(self, name:str, unicode: str, color: int, value: int, fenName: str):
@@ -26,8 +27,9 @@ class Piece:
 
     def getName(self):
         return self.name
-    
-    
+
+
+
 def getBoard():
     """Returns a 8x8 board."""
     return [[0 for x in range(8)] for y in range(8)]
@@ -131,31 +133,95 @@ def possibleMoves(pieces: list, board: list):
                     else:
                         if board[x-1][j-1] !=0 and '♔' and board[x-1][j-1] not in black:
                             possibleMoves[csL[board[x][j]], (x, j)] += (x-1, j-1)
+
+                #bishops
+                if csL[board[x][j]] == "b":
+                    #check if 1<= x and j <= 6, loop each adjacents until adjacents == samecolor piece or board limit 
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                if csL[board[x][j]] == "B":
+                    #check if 1<= x and j <= 6, loop each adjacents until adjacents == samecolor piece or board limit 
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
                 #knights
                 if csL[board[x][j]] == "n":
-                    #board[x+-2/-1][j+1-1]
-                    try:
-                        if board[x+2][j-1] !=0 and '♚' and board[x-1][j-1] not in black:
+                    
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                if csL[board[x][j]] == "N":
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                #rooks
+                if csL[board[x][j]] == "r":
+                    #check if adjacents are 0, loop for those ones until == samepiece or board lenght j and x+ (1,len(board))
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                if csL[board[x][j]] == "R":
+                    #check if adjacents are 0, loop for those ones until == samepiece or board lenght j and x+ (1,len(board))
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                #queens
+                if csL[board[x][j]] == "q":
+                    #combine test cases from both bishop and rook and test cases bishop + rook
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                if csL[board[x][j]] == "Q":
+                    #combine test cases from both bishop and rook and test cases bishop + rook
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                
+                #kings
+                if csL[board[x][j]] == "k":
+                    #check relative position, then check adjacents are empty. we implement checkfnction after to see if the square
+                    #opens any check on the king
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
 
-    #exclude the possible alignments where ally's piece collide and add possible captures
+                if csL[board[x][j]] == "K":
+                    possibleMoves[csL[board[x][j]], (x,j)] = []
+                                
+
     #return the dictionnary
     return possibleMoves
 
 
-def PlayerPlay(possibleMoves: list, board: list):
-    pass
+def PlayerPlay(possibleMoves: dict, board: list):
+    #ask user input
+    playerMove = eval(input("Player's turn, enter move as ([case][number][piece] -- options [take][promote-> __.Piece]): "))
+    #use regex to verify form and parse it as (x,y)
+    #check if (x,y) from dict[key] is valid 
+    #update board[old_coordinates], board[newcoordinates] = 0, pieceUnicode()
     
-def computerPlay(possibleMoves: list, board: list):
+    
+def computerPlay(possibleMoves: dict, board: list):
     pass
+    #for now, take random moves from possibleMoves
+    #update board[old_coordinates], board[newcoordinates] = 0, pieceUnicode()
+    
 
-def isCheckmate(board: list):
+def isCheckmate(board: list, king: tuple):
     pass
+    #checks isCheck --> bool:
+    #if True, checks coordinate tuple king:
+    #checkmate means no piece that checks can be captured, and king doesn't have any legal square
+    #so, get the piece's checking the king (or the one) and check if any of the (two or more) piece cannot be captured;
+    #loop over dictionnary to see if all of the king's adjacents are not In possibleMoves(dict)
+    #return True 
 
 def isCheck(board: list):
     pass
+    #check if any piece's alignments collide with enemy king
 
 def isDraw(board: list):
     pass
+    #call coutManagement:
+    #check if cout >= 50 but no draws have been made
+    #check absolute draws (few pieces left on board)
+    #
+    
+
+def coutManagement(board: list):
+    pass
+    #function that stores all moves, FEN, and number of moves / 2
+    #returns a stats dictionnary with fen,  num moves and cout as keys
 
 
 #create the pieces and put them in a list
